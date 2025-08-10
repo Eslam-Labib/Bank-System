@@ -42,7 +42,7 @@ public:
     void withdraw(double amount) { if (balance >= amount) balance -= amount; }
 
     void display() {
-        cout << "ID: " << id << "\nName: " << name << "\nBalance: " << balance << "\n";
+        cout << "\033[33mID: " << id << "\nName: " << name << "\nBalance: " << balance << "\033[0m\033[92m $\033[0m" << "\n\033[0m";
     }
 };
 
@@ -63,7 +63,7 @@ public:
     }
 
     void display() {
-        cout << "ID: " << id << "\nName: " << name << "\nAge: " << age << "\nSalary: " << salary << "\n";
+        cout << "\033[33mID: " << id << "\nName: " << name << "\nAge: " << age << "\nSalary: " << salary << "\033[92m $\033[0m" << "\n\033[0m";
     }
 };
 
@@ -126,41 +126,41 @@ void clientMenu(Client& c) {
     int choice;
     do {
         clearScreen();
-        cout << "Client Menu:" << endl;
-        cout << "1.Deposit" << endl;
-        cout << "2.Withdraw" << endl;
-        cout << "3.Show Balance" << endl;
-        cout << "4.Invest" << endl;
-        cout << "5.Loans" << endl;
-        cout << "6.Bank Benefits" << endl;
-        cout << "0.Exit" << endl;
-        cout << "Choice: ";
+        cout << "\033[92m === Client Menu: ===\033[0m" << endl;
+        cout << "\033[96m1.\033[33mDeposit\033[0m" << endl;
+        cout << "\033[96m2.\033[33mWithdraw\033[0m" << endl;
+        cout << "\033[96m3.\033[33mShow Balance\033[0m" << endl;
+        cout << "\033[96m4.\033[33mInvest\033[0m" << endl;
+        cout << "\033[96m5.\033[33mLoans\033[0m" << endl;
+        cout << "\033[96m6.\033[33mBank Benefits\033[0m" << endl;
+        cout << "\033[31m0.Exit\033[0m" << endl;
+        cout << "\033[33mChoice: \033[0m";
 
         cin >> choice;
 
         clearScreen();
         if (choice == 1) {
-            double amt; cout << "Amount: "; cin >> amt; c.deposit(amt);
-            cout << "Deposit successful.\n";
+            double amt; cout << "\033[33mAmount to Deposite: \033[0m"; cin >> amt; c.deposit(amt);
+            cout << "\033[92mDeposit successful\033[0m\n";
         }
         else if (choice == 2) {
             double amt; cout << "Amount: "; cin >> amt; c.withdraw(amt);
-            cout << "Withdrawal processed.\n";
+            cout << "\033[92mWithdrawal processed\033[0m\n";
         }
         else if (choice == 3) {
             c.display();
         }
         else if (choice == 4) {
-            cout << "Investment feature coming soon.\n";
+            cout << "\033[33mInvestment feature coming soon\033[0m\n";
         }
         else if (choice == 5) {
-            cout << "Loan feature coming soon.\n";
+            cout << "\033[33mLoan feature coming soon\033[0m\n";
         }
         else if (choice == 6) {
-            cout << "Bank benefits feature coming soon.\n";
+            cout << "\033[33mBank benefits feature coming soon\n\033[0m";
         }
         else if (choice != 0) {
-            cout << "Wrong Choice, try another one.\n";
+            cout << "\033[31mWrong Choice, try another one\033[0m\n";
         }
         pauseScreen();
     } while (choice != 0);
@@ -170,33 +170,33 @@ void employeeMenu() {
     int choice;
     do {
         clearScreen();
-        cout << "Employee Menu:\n";
-        cout << "1. View Client List\n";
-        cout << "2. Add Employee\n";
-        cout << "0. Exit\n";
-        cout << "Choice: ";
+        cout << "\033[92m === Employee Menu: === \n\033[0m";
+        cout << "\033[96m1. \033[33mView Client List\n\033[0m";
+        cout << "\033[96m2. \033[33mAdd Employee\n\033[0m";
+        cout << "\033[96m0. \033[31mExit\n\033[0m";
+        cout << "\033[33mChoice: \033[0m";
         cin >> choice;
 
         if (choice == 1) {
             int clientNum;
             do {
                 clearScreen();
-                cout << "Client List:\n";
+                cout << "\033[92m === Client List: ===\n\033[0m";
                 for (int i = 0; i < clientCount; i++) {
                     cout << i + 1 << ". " << clients[i].name << " (ID: " << clients[i].id << ")\n";
                 }
-                cout << "\nEnter client number to view info (0 to return): ";
+                cout << "\n\033[33mEnter client number to view info (0 to return): \033[0m";
                 cin >> clientNum;
 
                 if (clientNum > 0 && clientNum <= clientCount) {
                     clearScreen();
-                    cout << "Client Information:\n";
+                    cout << "\033[92m === Client Information: === \n\033[0m";
                     clients[clientNum - 1].display();
-                    cout << "Password: " << clients[clientNum - 1].password << "\n";
+                    cout << "\033[33mPassword: " << clients[clientNum - 1].password << "\n\033[0m";
                     pauseScreen();
                 }
                 else if (clientNum != 0) {
-                    cout << "Invalid client number!\n";
+                    cout << "\033[31mInvalid client number\033[0m\n";
                     pauseScreen();
                 }
 
@@ -207,26 +207,26 @@ void employeeMenu() {
                 Employee& e = employees[employeeCount];
                 e.id = employeeCount + 1;
                 clearScreen();
-                cout << "Enter new employee name: ";
+                cout << "\033[33mEnter new employee name: \033[0m";
                 cin.ignore();
                 getline(cin, e.name);
-                cout << "Enter employee password: ";
+                cout << "\033[33mEnter employee password: \033[0m";
                 getline(cin, e.password);
-                cout << "Enter employee age: ";
+                cout << "\033[33mEnter employee age: \033[0m";
                 cin >> e.age;
-                cout << "Enter employee salary: ";
+                cout << "\033[33mEnter employee salary: \033[0m";
                 cin >> e.salary;
                 employeeCount++;
                 saveEmployees();
-                cout << "Employee added successfully.\n";
+                cout << "\033[92mEmployee added successfully\033[0m\n";
             }
             else {
-                cout << "Employee list is full.\n";
+                cout << "\033[31mEmployee list is full\033[0m\n";
             }
             pauseScreen();
         }
         else if (choice != 0) {
-            cout << "Invalid choice!\n";
+            cout << "\033[31mInvalid choice\033[0m\n";
             pauseScreen();
         }
     } while (choice != 0);
@@ -236,18 +236,18 @@ void manageEmployeesMenu() {
     int choice;
     do {
         clearScreen();
-        cout << "Manage Employees Menu:\n";
-        cout << "1. View Employees\n";
-        cout << "2. Edit Employee\n";
-        cout << "3. Remove Employee\n";
-        cout << "0. Return\n";
-        cout << "Choice: ";
+        cout << "\033[92m === Manage Employees Menu: ===\033[0m\n";
+        cout << "\033[96m1.\033[33m View Employees\n";
+        cout << "\033[96m2.\033[33m Edit Employee\n";
+        cout << "\033[96m3.\033[33m Remove Employee\n";
+        cout << "\033[96m0.\033[33m Return\n\033[0m";
+        cout << "\033[33mChoice: \033[0m";
         cin >> choice;
 
         if (choice == 1) {
             clearScreen();
             if (employeeCount == 0) {
-                cout << "No employees found.\n";
+                cout << "\033[31mNo employees found\033[0m\n";
             }
             else {
                 for (int i = 0; i < employeeCount; i++) {
@@ -260,44 +260,44 @@ void manageEmployeesMenu() {
         }
         else if (choice == 2) {
             int empNum;
-            cout << "Enter employee number to edit: ";
+            cout << "\033[33mEnter employee number to edit: \033[0m";
             cin >> empNum;
             if (empNum > 0 && empNum <= employeeCount) {
                 Employee& e = employees[empNum - 1];
                 clearScreen();
-                cout << "Editing Employee #" << empNum << ":\n";
-                cout << "Current name: " << e.name << "\nEnter new name (or '.' to keep current): ";
+                cout << "\033[33mEditing Employee #" << empNum << ":\n\033[0m";
+                cout << "\033[33mCurrent name: \033[0m" << e.name << "\n\033[33mEnter new name (or '.' to keep current): \033[0m";
                 cin.ignore();
                 string input;
                 getline(cin, input);
                 if (input != ".") e.name = input;
 
-                cout << "Current password: " << e.password << "\nEnter new password (or '.' to keep current): ";
+                cout << "\033[33mCurrent password: \033[0m" << e.password << "\n\033[33mEnter new password (or '.' to keep current): \033[0m";
                 getline(cin, input);
                 if (input != ".") e.password = input;
 
-                cout << "Current age: " << e.age << "\nEnter new age (or 0 to keep current): ";
+                cout << "\033[33mCurrent age: \033[0m" << e.age << "\033[33m\nEnter new age (or 0 to keep current): \033[0m";
                 int newAge;
                 cin >> newAge;
                 if (newAge > 0) e.age = newAge;
 
-                cout << "Current salary: " << e.salary << "\nEnter new salary (or 0 to keep current): ";
+                cout << "\033[33mCurrent salary: \033[0m" << e.salary << "\033[33m\nEnter new salary (or 0 to keep current):\033[0m ";
                 double newSalary;
                 cin >> newSalary;
                 if (newSalary > 0) e.salary = newSalary;
 
                 saveEmployees();
-                cout << "Employee updated successfully.\n";
+                cout << "\033[92mEmployee updated successfully\033[0m\n";
                 pauseScreen();
             }
             else {
-                cout << "Invalid employee number.\n";
+                cout << "\033[31mInvalid employee number\033[0m\n";
                 pauseScreen();
             }
         }
         else if (choice == 3) {
             int empNum;
-            cout << "Enter employee number to remove: ";
+            cout << "\033[33mEnter employee number to remove: \033[0m";
             cin >> empNum;
             if (empNum > 0 && empNum <= employeeCount) {
                 for (int i = empNum - 1; i < employeeCount - 1; i++) {
@@ -306,16 +306,16 @@ void manageEmployeesMenu() {
                 }
                 employeeCount--;
                 saveEmployees();
-                cout << "Employee removed successfully.\n";
+                cout << "\033[92mEmployee removed successfully\033[0m\n";
                 pauseScreen();
             }
             else {
-                cout << "Invalid employee number.\n";
+                cout << "\033[31mInvalid employee number\033[0m\n";
                 pauseScreen();
             }
         }
         else if (choice != 0) {
-            cout << "Wrong Choice, try another one.\n";
+            cout << "\033[31mWrong Choice, try another one\033[0m\n";
             pauseScreen();
         }
     } while (choice != 0);
@@ -325,11 +325,11 @@ void adminMenu() {
     int choice;
     do {
         clearScreen();
-        cout << "Admin Menu:" << endl;
-        cout << "1. View Client List\n";
-        cout << "2. Manage Employees\n";
-        cout << "0. Exit\n";
-        cout << "Choice: ";
+        cout << "\033[92m === Admin Menu: === \033[0m" << endl;
+        cout << "\033[96m1. \033[33mView Client List\n\033[0m";
+        cout << "\033[96m2. \033[33mManage Employees\n\033[0m";
+        cout << "\033[96m0. \033[31mExit\n\033[0m";
+        cout << "\033[33mChoice: \033[0m";
 
         cin >> choice;
 
@@ -338,22 +338,22 @@ void adminMenu() {
             int clientNum;
             do {
                 clearScreen();
-                cout << "Client List:\n";
+                cout << "\033[92mClient List:\033[0m\n";
                 for (int i = 0; i < clientCount; i++) {
                     cout << i + 1 << ". " << clients[i].name << " (ID: " << clients[i].id << ")\n";
                 }
-                cout << "\nEnter client number to view info (0 to return): ";
+                cout << "\n\033[33mEnter client number to view info (0 to return)\033[0m: ";
                 cin >> clientNum;
 
                 if (clientNum > 0 && clientNum <= clientCount) {
                     clearScreen();
-                    cout << "Client Information:\n";
+                    cout << "\033[92mClient Information:\033[0m\n";
                     clients[clientNum - 1].display();
-                    cout << "Password: " << clients[clientNum - 1].password << "\n";
+                    cout << "\033[33mPassword: \033[0m" << clients[clientNum - 1].password << "\n";
                     pauseScreen();
                 }
                 else if (clientNum != 0) {
-                    cout << "Invalid client number!\n";
+                    cout << "\033[31mInvalid client number\033[0m\n";
                     pauseScreen();
                 }
             } while (clientNum != 0);
@@ -362,7 +362,7 @@ void adminMenu() {
             manageEmployeesMenu();
         }
         else if (choice != 0) {
-            cout << "Wrong Choice, try another one.\n";
+            cout << "\033[31mWrong Choice, try another one\033[0m\n";
             pauseScreen();
         }
     } while (choice != 0);
@@ -376,14 +376,16 @@ void mainMenu() {
     bool exitFlag = false;
     do {
         clearScreen();
-        cout << "\nMain Menu:\n"
-            << "1. Add Client\n"
-            << "2. Add Employee\n"
-            << "3. Login as Client\n"
-            << "4. Login as Employee\n"
-            << "5. Login as Admin\n"
-            << "0. Exit\n"
-            << "Choice: ";
+        cout << "\033[92m===== \033[96mWelcome to The Bank\033[0m\033[92m =====\033[0m" << endl;
+        cout << "\033[92m========== \033[96mMain Menu:\033[0m \033[92m=========\033[0m" << endl;
+        cout << "\033[92m===============================\033[0m" << endl;
+        cout << "\033[32m\033[96m1.\033[33m Add Client\n"
+            << "\033[96m2.\033[0m\033[33m Add Employee\n"
+            << "\033[96m3.\033[0m\033[33m Login as Client\n"
+            << "\033[96m4.\033[0m\033[33m Login as Employee\n"
+            << "\033[96m5.\033[0m\033[33m Login as Admin\n"
+            << "\033[96m0.\033[0m\033[31m Exit\n"
+            << "\033[33mChoice: \033[0m";
         cin >> choice;
 
         clearScreen();
@@ -391,15 +393,15 @@ void mainMenu() {
         case 1:
             if (clientCount < MAX_CLIENTS) {
                 clients[clientCount].id = clientCount + 1;
-                cout << "Name: "; cin >> clients[clientCount].name;
-                cout << "Password: "; cin >> clients[clientCount].password;
-                cout << "Balance: "; cin >> clients[clientCount].balance;
+                cout << "\033[33mName\033[0m: "; cin >> clients[clientCount].name;
+                cout << "\033[33mPassword: \033[0m"; cin >> clients[clientCount].password;
+                cout << "\033[33mBalance: \033[0m"; cin >> clients[clientCount].balance;
                 clientCount++;
                 saveClients();
-                cout << "Client added successfully.\n";
+                cout << "\033[92mClient added successfully\033[0m\n";
             }
             else {
-                cout << "Client list full.\n";
+                cout << "\033[31mClient list full\033[0m\n";
             }
             pauseScreen();
             break;
@@ -408,21 +410,21 @@ void mainMenu() {
             if (employeeCount < MAX_EMPLOYEES) {
                 Employee& e = employees[employeeCount];
                 e.id = employeeCount + 1;
-                cout << "Enter new employee name: ";
+                cout << "\033[33mEnter new employee name: \033[0m";
                 cin.ignore();
                 getline(cin, e.name);
-                cout << "Enter employee password: ";
+                cout << "\033[33mEnter employee password: \033[0m";
                 getline(cin, e.password);
-                cout << "Enter employee age: ";
+                cout << "\033[33mEnter employee age: \033[0m";
                 cin >> e.age;
-                cout << "Enter employee salary: ";
+                cout << "\033[33mEnter employee salary: \033[0m";
                 cin >> e.salary;
                 employeeCount++;
                 saveEmployees();
-                cout << "Employee added successfully.\n";
+                cout << "\033[92mEmployee added successfully\033[0m\n";
             }
             else {
-                cout << "Employee list is full.\n";
+                cout << "\033[31mEmployee list is full\033[0m\n";
             }
             pauseScreen();
             break;
@@ -430,8 +432,8 @@ void mainMenu() {
 
         case 3: {
             string pass; int id;
-            cout << "ID: "; cin >> id;
-            cout << "Password: "; cin >> pass;
+            cout << "\033[33mID: \033[0m"; cin >> id;
+            cout << "\033[33mPassword: \033[0m"; cin >> pass;
             bool found = false;
             for (int i = 0; i < clientCount; i++) {
                 if (clients[i].id == id && clients[i].password == pass) {
@@ -442,7 +444,7 @@ void mainMenu() {
                 }
             }
             if (!found) {
-                cout << "Invalid ID or password!\n";
+                cout << "\033[31mInvalid ID or password\033[0m\n";
                 pauseScreen();
             }
             break;
@@ -450,13 +452,13 @@ void mainMenu() {
 
         case 4: {
             string pass;
-            cout << "Employee password: ";
+            cout << "\033[33mEmployee password: \033[0m";
             cin >> pass;
             if (pass == "emp123") {
                 employeeMenu();
             }
             else {
-                cout << "Wrong password!\n";
+                cout << "\033[31mWrong password\033[0m\n";
                 pauseScreen();
             }
             break;
@@ -464,13 +466,13 @@ void mainMenu() {
 
         case 5: {
             string pass;
-            cout << "Admin password: ";
+            cout << "\033[33mAdmin password: \033[0m";
             cin >> pass;
             if (pass == "admin123") {
                 adminMenu();
             }
             else {
-                cout << "Wrong password!\n";
+                cout << "\033[31mWrong password\033[0m\n";
                 pauseScreen();
             }
             break;
@@ -481,7 +483,7 @@ void mainMenu() {
             break;
 
         default:
-            cout << "Wrong Choice, try another one.\n";
+            cout << "\033[31mWrong Choice, try another one\033[0m\n";
             pauseScreen();
             break;
         }
