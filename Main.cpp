@@ -7,7 +7,6 @@ using namespace std;
 const int MAX_CLIENTS = 100;
 const int MAX_EMPLOYEES = 50;
 
-// ===== Screen Clear =====
 void clearScreen() {
 #ifdef _WIN32
     system("cls");
@@ -16,14 +15,12 @@ void clearScreen() {
 #endif
 }
 
-// ===== Pause =====
 void pauseScreen() {
     cout << "\nPress Enter to continue...";
     cin.ignore();
     cin.get();
 }
 
-// ===== Client Class =====
 class Client {
 public:
     int id;
@@ -49,7 +46,6 @@ public:
     }
 };
 
-// ===== Employee Class =====
 class Employee {
 public:
     int id;
@@ -71,7 +67,6 @@ public:
     }
 };
 
-// ===== Admin Class =====
 class Admin {
 public:
     int id;
@@ -89,15 +84,13 @@ public:
     }
 };
 
-// ===== Bank Data =====
 Client clients[MAX_CLIENTS];
 Employee employees[MAX_EMPLOYEES];
-Admin admin; // only one admin
+Admin admin;
 
 int clientCount = 0;
 int employeeCount = 0;
 
-// ===== File Handling =====
 void saveClients() {
     ofstream file("clients.txt");
     for (int i = 0; i < clientCount; i++) {
@@ -129,7 +122,6 @@ void loadEmployees() {
     }
 }
 
-// ===== Menus =====
 void clientMenu(Client& c) {
     int choice;
     do {
@@ -308,10 +300,9 @@ void manageEmployeesMenu() {
             cout << "Enter employee number to remove: ";
             cin >> empNum;
             if (empNum > 0 && empNum <= employeeCount) {
-                // Shift employees down to remove
                 for (int i = empNum - 1; i < employeeCount - 1; i++) {
                     employees[i] = employees[i + 1];
-                    employees[i].id = i + 1; // update IDs
+                    employees[i].id = i + 1;
                 }
                 employeeCount--;
                 saveEmployees();
@@ -377,7 +368,6 @@ void adminMenu() {
     } while (choice != 0);
 }
 
-// ===== Main Menu Function =====
 void mainMenu() {
     loadClients();
     loadEmployees();
@@ -501,7 +491,6 @@ void mainMenu() {
     saveEmployees();
 }
 
-// ===== Main =====
 int main() {
     mainMenu();
     return 0;
