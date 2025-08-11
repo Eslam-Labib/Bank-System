@@ -6,6 +6,7 @@ using namespace std;
 
 const int MAX_CLIENTS = 100;
 const int MAX_EMPLOYEES = 50;
+const int MAX_LOANS = 100;
 
 void clearScreen() {
 #ifdef _WIN32
@@ -20,6 +21,43 @@ void pauseScreen() {
     cin.ignore();
     cin.get();
 }
+
+class Loan {
+public:
+    int loanId;
+    int clientId;
+    double amount;
+    double interestRate;
+    int termMonths;
+    bool approved;
+
+    Loan() {
+        loanId = 0;
+        clientId = 0;
+        amount = 0;
+        interestRate = 0;
+        termMonths = 0;
+        approved = false;
+    }
+
+    double calculateTotalRepayment() {
+        return amount + (amount * interestRate * termMonths / 12.0);
+    }
+
+    void approve() { approved = true; }
+    void reject() { approved = false; }
+
+    void display() {
+        cout << "\033[33mLoan ID:\033[0m " << loanId
+             << "\n\033[33mClient ID:\033[0m " << clientId
+             << "\n\033[33mAmount:\033[0m " << amount << " $"
+             << "\n\033[33mInterest Rate:\033[0m " << interestRate * 100 << "%"
+             << "\n\033[33mTerm:\033[0m " << termMonths << " months"
+             << "\n\033[33mTotal Repayment:\033[0m " << calculateTotalRepayment() << " $"
+             << "\n\033[33mStatus:\033[0m " << (approved ? "\033[92mApproved\033[0m" : "\033[31mPending\033[0m") << "\n";
+    }
+};
+
 
 class Client {
 public:
@@ -87,9 +125,11 @@ public:
 Client clients[MAX_CLIENTS];
 Employee employees[MAX_EMPLOYEES];
 Admin admin;
+Loan loans[MAX_LOANS];
 
 int clientCount = 0;
 int employeeCount = 0;
+int loanCount = 0;
 
 void saveClients() {
     ofstream file("clients.txt");
@@ -121,6 +161,32 @@ void loadEmployees() {
         employeeCount++;
     }
 }
+
+void saveLoans() {
+    ofstream file("loans.txt");
+    for (int i = 0; i < loanCount; i++) {
+        file << loans[i].loanId << " "
+             << loans[i].clientId << " "
+             << loans[i].amount << " "
+             << loans[i].interestRate << " "
+             << loans[i].termMonths << " "
+             << loans[i].approved << "\n";
+    }
+}
+
+void loadLoans() {
+    ifstream file("loans.txt");
+    loanCount = 0;
+    while (file >> loans[loanCount].loanId
+                >> loans[loanCount].clientId
+                >> loans[loanCount].amount
+                >> loans[loanCount].interestRate
+                >> loans[loanCount].termMonths
+                >> loans[loanCount].approved) {
+        loanCount++;
+    }
+}
+
 
 void clientMenu(Client& c) {
     int choice;
@@ -154,8 +220,47 @@ void clientMenu(Client& c) {
             cout << "\033[33mInvestment feature coming soon\033[0m\n";
         }
         else if (choice == 5) {
-            cout << "\033[33mLoan feature coming soon\033[0m\n";
+    int loanChoice;
+    cout << "\033[96m1.\033[33m Request Loan\n\033[0m";
+    cout << "\033[96m2.\033[33m View My Loans\n\033[0m";
+    cout << "\033[96m0.\033[31m Back\n\033[0m";
+    cout << "Choice: ";
+    cin >> loanChoice;
+
+    if (loanChoice == 1) {
+        if (loanCount < MAX_LOANS) {
+            Loan& l = loans[loanCount];
+            l.loanId = loanCount + 1;
+            l.clientId = c.id;
+            cout << "Enter loan amount: ";
+            cin >> l.amount;
+            cout << "Enter interest rate (e.g. 0.05 for 5%): ";
+            cin >> l.interestRate;
+            cout << "Enter term (months): ";
+            cin >> l.termMonths;
+            l.approved = false;
+            loanCount++;
+            saveLoans();
+            cout << "\033[92mLoan request submitted successfully!\033[0m\n";
+        } else {
+            cout << "\033[31mLoan list is full\033[0m\n";
         }
+    }
+    else if (loanChoice == 2) {
+        bool found = false;
+        for (int i = 0; i < loanCount; i++) {
+            if (loans[i].clientId == c.id) {
+                loans[i].display();
+                cout << "-----------------\n";
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "\033[31mNo loans found\033[0m\n";
+        }
+    }
+}
+
         else if (choice == 6) {
             cout << "\033[33mBank benefits feature coming soon\n\033[0m";
         }
@@ -173,6 +278,7 @@ void employeeMenu() {
         cout << "\033[92m === Employee Menu: === \n\033[0m";
         cout << "\033[96m1. \033[33mView Client List\n\033[0m";
         cout << "\033[96m2. \033[33mAdd Employee\n\033[0m";
+        cout << "\033[96m3. \033[33mManage Loan Requests\n\033[0m";
         cout << "\033[96m0. \033[31mExit\n\033[0m";
         cout << "\033[33mChoice: \033[0m";
         cin >> choice;
@@ -225,6 +331,31 @@ void employeeMenu() {
             }
             pauseScreen();
         }
+        else if (choice == 3) {
+    int loanNum;
+    clearScreen();
+    cout << "\033[92mPending Loans:\033[0m\n";
+    for (int i = 0; i < loanCount; i++) {
+        if (!loans[i].approved) {
+            cout << i + 1 << ". ";
+            loans[i].display();
+            cout << "-----------------\n";
+        }
+    }
+    cout << "Enter loan number to approve/reject (0 to back): ";
+    cin >> loanNum;
+    if (loanNum > 0 && loanNum <= loanCount) {
+        int decision;
+        cout << "1. Approve\n2. Reject\nChoice: ";
+        cin >> decision;
+        if (decision == 1) loans[loanNum - 1].approve();
+        else if (decision == 2) loans[loanNum - 1].reject();
+        saveLoans();
+        cout << "\033[92mLoan status updated\033[0m\n";
+    }
+    pauseScreen();
+}
+
         else if (choice != 0) {
             cout << "\033[31mInvalid choice\033[0m\n";
             pauseScreen();
@@ -371,6 +502,10 @@ void adminMenu() {
 void mainMenu() {
     loadClients();
     loadEmployees();
+    loadClients();
+loadEmployees();
+loadLoans();
+
 
     int choice;
     bool exitFlag = false;
@@ -491,6 +626,8 @@ void mainMenu() {
 
     saveClients();
     saveEmployees();
+saveLoans();
+
 }
 
 int main() {
