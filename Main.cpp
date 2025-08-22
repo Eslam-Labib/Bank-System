@@ -1,7 +1,10 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cctype>
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<cctype>
+#include<chrono>
+#include<thread>
+#include<vector>
 using namespace std;
 
 const int MAX_CLIENTS = 100;
@@ -16,28 +19,77 @@ void clearScreen() {
 #endif
 }
 
+void goodbyeDelay() {
+    cout << "Goodbye" << endl;
+    this_thread::sleep_for(chrono::seconds(3));
+}
+
+void clearInputBuffer() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+int getIntInput(const string& prompt) {
+    int value;
+    while (true) {
+        cout << prompt;
+        if (cin >> value) {
+            clearInputBuffer();
+            return value;
+        }
+        else {
+            cout << "Invalid input. Please enter a valid number.\n";
+            clearInputBuffer();
+        }
+    }
+}
+
+double getDoubleInput(const string& prompt) {
+    double value;
+    while (true) {
+        cout << prompt;
+        if (cin >> value) {
+            clearInputBuffer();
+            return value;
+        }
+        else {
+            cout << "Invalid input. Please enter a valid number.\n";
+            clearInputBuffer();
+        }
+    }
+}
+
+string getStringInput(const string& prompt) {
+    string value;
+    cout << prompt;
+    getline(cin, value);
+    return value;
+}
+
+void pauseAndClear() {
+    cout << "Press Enter to continue...";
+    getStringInput("");
+    clearScreen();
+}
+
 class Validation {
 public:
     static bool validateID(int id) {
         return id > 0;
     }
-
     static bool validateName(const string& name) {
-        if (name.size() < 5 || name.size() > 20) return false;
+        if (name.size() < 1 || name.size() > 20) return false;
         for (char c : name) {
-            if (!isalpha(c)) return false;
+            if (!isalpha(c) && c != ' ') return false;
         }
         return true;
     }
-
     static bool validatePassword(const string& password) {
         return password.size() >= 8 && password.size() <= 20;
     }
-
     static bool validateBalance(double balance) {
         return balance >= 1500;
     }
-
     static bool validateSalary(double salary) {
         return salary >= 5000;
     }
@@ -51,16 +103,9 @@ private:
     double balance;
 
 public:
-    Client() {
-        id = 0;
-        name = "";
-        password = "";
-        balance = 0;
-    }
+    Client() : id(0), name(""), password(""), balance(0) {}
 
     Client(int i, const string& n, const string& p, double b) {
-        id = 0;
-        balance = 0;
         setId(i);
         setName(n);
         setPassword(p);
@@ -81,7 +126,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 5-20 chars.\n";
+            cout << "Invalid name. Letters only, 1-20 chars.\n";
         }
     }
 
@@ -103,21 +148,10 @@ public:
         }
     }
 
-    int getId() const {
-        return id;
-    }
-
-    string getName() const {
-        return name;
-    }
-
-    string getPassword() const {
-        return password;
-    }
-
-    double getBalance() const {
-        return balance;
-    }
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getPassword() const { return password; }
+    double getBalance() const { return balance; }
 
     void display() const {
         cout << "ID: " << id << " | Name: " << name << " | Balance: " << balance << endl;
@@ -134,16 +168,9 @@ private:
     double salary;
 
 public:
-    Employee() {
-        id = 0;
-        name = "";
-        password = "";
-        salary = 0;
-    }
+    Employee() : id(0), name(""), password(""), salary(0) {}
 
     Employee(int i, const string& n, const string& p, double s) {
-        id = 0;
-        salary = 0;
         setId(i);
         setName(n);
         setPassword(p);
@@ -164,7 +191,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 5-20 chars.\n";
+            cout << "Invalid name. Letters only, 1-20 chars.\n";
         }
     }
 
@@ -186,21 +213,10 @@ public:
         }
     }
 
-    int getId() const {
-        return id;
-    }
-
-    string getName() const {
-        return name;
-    }
-
-    string getPassword() const {
-        return password;
-    }
-
-    double getSalary() const {
-        return salary;
-    }
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getPassword() const { return password; }
+    double getSalary() const { return salary; }
 
     void menu();
     void addClient(Client& client);
@@ -217,16 +233,9 @@ private:
     double salary;
 
 public:
-    Admin() {
-        id = 0;
-        name = "";
-        password = "";
-        salary = 0;
-    }
+    Admin() : id(0), name(""), password(""), salary(0) {}
 
     Admin(int i, const string& n, const string& p, double s) {
-        id = 0;
-        salary = 0;
         setId(i);
         setName(n);
         setPassword(p);
@@ -247,7 +256,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 5-20 chars.\n";
+            cout << "Invalid name. Letters only, 1-20 chars.\n";
         }
     }
 
@@ -269,21 +278,10 @@ public:
         }
     }
 
-    int getId() const {
-        return id;
-    }
-
-    string getName() const {
-        return name;
-    }
-
-    string getPassword() const {
-        return password;
-    }
-
-    double getSalary() const {
-        return salary;
-    }
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getPassword() const { return password; }
+    double getSalary() const { return salary; }
 
     void menu();
     void addClient(Client& client);
@@ -405,25 +403,26 @@ void loadAdmins() {
 void Client::menu() {
     int choice;
     do {
+        clearScreen();
         cout << "\n==== Client Menu ====\n";
         cout << "1. Show Balance\n";
         cout << "2. Deposit Money\n";
         cout << "3. Withdraw Money\n";
         cout << "4. Transfer Money\n";
         cout << "0. Exit\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
+        switch (choice) {
+        case 1:
             cout << "Balance: " << balance << endl;
-        }
-        else if (choice == 2) {
+            pauseAndClear();
+            break;
+
+        case 2: {
             cout << "Current Balance: " << balance << endl;
-            double amount;
-            cout << "Amount to deposit: ";
-            cin >> amount;
+            double amount = getDoubleInput("Amount to deposit: ");
             if (amount > 0) {
                 balance += amount;
                 cout << "New Balance: " << balance << endl;
@@ -431,12 +430,14 @@ void Client::menu() {
             else {
                 cout << "Invalid amount.\n";
             }
+            saveClients();
+            pauseAndClear();
+            break;
         }
-        else if (choice == 3) {
+
+        case 3: {
             cout << "Current Balance: " << balance << endl;
-            double amount;
-            cout << "Amount to withdraw: ";
-            cin >> amount;
+            double amount = getDoubleInput("Amount to withdraw: ");
             if (amount > 0 && amount <= balance) {
                 balance -= amount;
                 cout << "New Balance: " << balance << endl;
@@ -444,15 +445,16 @@ void Client::menu() {
             else {
                 cout << "Invalid amount or insufficient funds.\n";
             }
+            saveClients();
+            pauseAndClear();
+            break;
         }
-        else if (choice == 4) {
+
+        case 4: {
             cout << "Current Balance: " << balance << endl;
-            int target;
-            double amount;
-            cout << "Recipient Client ID: ";
-            cin >> target;
-            cout << "Amount to transfer: ";
-            cin >> amount;
+            int target = getIntInput("Recipient Client ID: ");
+            double amount = getDoubleInput("Amount to transfer: ");
+
             if (amount <= 0 || amount > balance) {
                 cout << "Invalid amount or insufficient funds.\n";
             }
@@ -460,8 +462,7 @@ void Client::menu() {
                 bool found = false;
                 for (int i = 0; i < clientCount; i++) {
                     if (clients[i].getId() == target) {
-                        double nb = clients[i].getBalance() + amount;
-                        clients[i].setBalance(nb);
+                        clients[i].setBalance(clients[i].getBalance() + amount);
                         balance -= amount;
                         cout << "Transfer done. Your New Balance: " << balance << endl;
                         found = true;
@@ -472,14 +473,20 @@ void Client::menu() {
                     cout << "Recipient not found.\n";
                 }
             }
+            saveClients();
+            pauseAndClear();
+            break;
         }
-        else if (choice == 0) {
-            cout << "Goodbye.\n";
-        }
-        else {
+
+        case 0:
+            goodbyeDelay();
+            clearScreen();
+            break;
+
+        default:
             cout << "Invalid choice.\n";
+            pauseAndClear();
         }
-        saveClients();
     } while (choice != 0);
 }
 
@@ -527,35 +534,29 @@ void Employee::editClient(int cid, const string& n, const string& p, double b) {
 void Employee::menu() {
     int choice;
     do {
+        clearScreen();  // clear before showing the menu
         cout << "\n==== Employee Menu ====\n";
         cout << "1. Add Client\n";
         cout << "2. Search Client by ID\n";
         cout << "3. List Clients\n";
         cout << "4. Edit Client\n";
         cout << "0. Exit\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
-            int id;
-            string n;
-            string p;
-            double b;
-            cout << "Client ID: ";
-            cin >> id;
-            cout << "Name: ";
-            cin >> n;
-            cout << "Password: ";
-            cin >> p;
-            cout << "Balance: ";
-            cin >> b;
+        switch (choice) {
+        case 1: {
+            int id = getIntInput("Client ID: ");
+            string n = getStringInput("Name: ");
+            string p = getStringInput("Password (must be between 8 - 20): ");
+            double b = getDoubleInput("Balance: ");
             Client c;
             c.setId(id);
             c.setName(n);
             c.setPassword(p);
             c.setBalance(b);
+
             if (Validation::validateID(id) &&
                 Validation::validateName(n) &&
                 Validation::validatePassword(p) &&
@@ -566,42 +567,44 @@ void Employee::menu() {
             else {
                 cout << "Invalid client data.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 2) {
-            int cid;
-            cout << "Client ID: ";
-            cin >> cid;
+
+        case 2: {
+            int cid = getIntInput("Client ID: ");
             Client* c = searchClient(cid);
-            if (c) {
-                c->display();
-            }
-            else {
-                cout << "Client not found.\n";
-            }
+            if (c) c->display();
+            else   cout << "Client not found.\n";
+            pauseAndClear();
+            break;
         }
-        else if (choice == 3) {
+
+        case 3: {
             listClient();
+            pauseAndClear();
+            break;
         }
-        else if (choice == 4) {
-            int cid;
-            string n;
-            string p;
-            double b;
-            cout << "Client ID: ";
-            cin >> cid;
-            cout << "New Name: ";
-            cin >> n;
-            cout << "New Password: ";
-            cin >> p;
-            cout << "New Balance: ";
-            cin >> b;
+
+        case 4: {
+            int cid = getIntInput("Client ID: ");
+            string n = getStringInput("New Name: ");
+            string p = getStringInput("New Password: ");
+            double b = getDoubleInput("New Balance: ");
             editClient(cid, n, p, b);
+            pauseAndClear();
+            break;
         }
-        else if (choice == 0) {
-            cout << "Goodbye.\n";
-        }
-        else {
+
+        case 0:
+            goodbyeDelay();
+            clearScreen();
+            break;
+
+        default:
             cout << "Invalid choice.\n";
+            pauseAndClear();
+            break;
         }
     } while (choice != 0);
 }
@@ -693,6 +696,7 @@ void Admin::listEmployee() {
 void Admin::menu() {
     int choice;
     do {
+        clearScreen();
         cout << "\n==== Admin Menu ====\n";
         cout << "1. Add Employee\n";
         cout << "2. Search Employee\n";
@@ -703,32 +707,23 @@ void Admin::menu() {
         cout << "7. Edit Client\n";
         cout << "8. List Clients\n";
         cout << "0. Exit\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
-
-            int id;
-            string n;
-            string p;
-            double s;
-
-            cout << "Employee ID: ";
-            cin >> id;
-            cout << "Name: ";
-            cin >> n;
-            cout << "Password: ";
-            cin >> p;
-            cout << "Salary: ";
-            cin >> s;
+        switch (choice) {
+        case 1: {
+            int id = getIntInput("Employee ID: ");
+            string n = getStringInput("Name: ");
+            string p = getStringInput("Password: ");
+            double s = getDoubleInput("Salary: ");
 
             Employee e;
             e.setId(id);
             e.setName(n);
             e.setPassword(p);
             e.setSalary(s);
+
             if (Validation::validateID(id) &&
                 Validation::validateName(n) &&
                 Validation::validatePassword(p) &&
@@ -739,11 +734,12 @@ void Admin::menu() {
             else {
                 cout << "Invalid employee data.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 2) {
-            int eid;
-            cout << "Employee ID: ";
-            cin >> eid;
+
+        case 2: {
+            int eid = getIntInput("Employee ID: ");
             Employee* e = searchEmployee(eid);
             if (e) {
                 cout << "ID: " << e->getId()
@@ -753,49 +749,37 @@ void Admin::menu() {
             else {
                 cout << "Employee not found.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 3) {
 
-            int eid;
-            string n;
-            string p;
-            double s;
-
-            cout << "Employee ID: ";
-            cin >> eid;
-            cout << "New Name: ";
-            cin >> n;
-            cout << "New Password: ";
-            cin >> p;
-            cout << "New Salary: ";
-            cin >> s;
-
+        case 3: {
+            int eid = getIntInput("Employee ID: ");
+            string n = getStringInput("New Name: ");
+            string p = getStringInput("New Password: ");
+            double s = getDoubleInput("New Salary: ");
             editEmployee(eid, n, p, s);
+            pauseAndClear();
+            break;
         }
-        else if (choice == 4) {
+
+        case 4:
             listEmployee();
-        }
-        else if (choice == 5) {
+            pauseAndClear();
+            break;
 
-            int id;
-            string n;
-            string p;
-            double b;
-
-            cout << "Client ID: ";
-            cin >> id;
-            cout << "Name: ";
-            cin >> n;
-            cout << "Password: ";
-            cin >> p;
-            cout << "Balance: ";
-            cin >> b;
+        case 5: {
+            int id = getIntInput("Client ID: ");
+            string n = getStringInput("Name: ");
+            string p = getStringInput("Password: ");
+            double b = getDoubleInput("Balance: ");
 
             Client c;
             c.setId(id);
             c.setName(n);
             c.setPassword(p);
             c.setBalance(b);
+
             if (Validation::validateID(id) &&
                 Validation::validateName(n) &&
                 Validation::validatePassword(p) &&
@@ -806,42 +790,42 @@ void Admin::menu() {
             else {
                 cout << "Invalid client data.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 6) {
-            int cid;
-            cout << "Client ID: ";
-            cin >> cid;
+
+        case 6: {
+            int cid = getIntInput("Client ID: ");
             Client* c = searchClient(cid);
-            if (c) {
-                c->display();
-            }
-            else {
-                cout << "Client not found.\n";
-            }
+            if (c) c->display();
+            else   cout << "Client not found.\n";
+            pauseAndClear();
+            break;
         }
-        else if (choice == 7) {
-            int cid;
-            string n;
-            string p;
-            double b;
-            cout << "Client ID: ";
-            cin >> cid;
-            cout << "New Name: ";
-            cin >> n;
-            cout << "New Password: ";
-            cin >> p;
-            cout << "New Balance: ";
-            cin >> b;
+
+        case 7: {
+            int cid = getIntInput("Client ID: ");
+            string n = getStringInput("New Name: ");
+            string p = getStringInput("New Password: ");
+            double b = getDoubleInput("New Balance: ");
             editClient(cid, n, p, b);
+            pauseAndClear();
+            break;
         }
-        else if (choice == 8) {
+
+        case 8:
             listClient();
-        }
-        else if (choice == 0) {
-            cout << "Goodbye.\n";
-        }
-        else {
+            pauseAndClear();
+            break;
+
+        case 0:
+            goodbyeDelay();
+            clearScreen();
+            break;
+
+        default:
             cout << "Invalid choice.\n";
+            pauseAndClear();
         }
     } while (choice != 0);
 }
@@ -849,41 +833,34 @@ void Admin::menu() {
 void clientMainMenu() {
     int choice;
     do {
+        clearScreen();
         cout << "\n==== Client Main ====\n";
         cout << "1. Add Client\n";
         cout << "2. Already a Client\n";
         cout << "3. Edit Client Info\n";
         cout << "0. Back\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
+        switch (choice) {
+        case 1: {
             if (clientCount >= MAX_CLIENTS) {
                 cout << "Cannot add more clients.\n";
-                continue;
+                pauseAndClear();
+                break;
             }
-
-            int id;
-            string n;
-            string p;
-            double b;
-
-            cout << "Client ID: ";
-            cin >> id;
-            cout << "Name: ";
-            cin >> n;
-            cout << "Password: ";
-            cin >> p;
-            cout << "Balance: ";
-            cin >> b;
+            int id = getIntInput("Client ID: ");
+            string n = getStringInput("Name: ");
+            string p = getStringInput("Password: ");
+            double b = getDoubleInput("Balance: ");
 
             Client c;
             c.setId(id);
             c.setName(n);
             c.setPassword(p);
             c.setBalance(b);
+
             if (Validation::validateID(id) &&
                 Validation::validateName(n) &&
                 Validation::validatePassword(p) &&
@@ -895,14 +872,14 @@ void clientMainMenu() {
             else {
                 cout << "Invalid client data.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 2) {
-            int id;
-            string pass;
-            cout << "Client ID: ";
-            cin >> id;
-            cout << "Password: ";
-            cin >> pass;
+
+        case 2: {
+            int id = getIntInput("Client ID: ");
+            string pass = getStringInput("Password: ");
+
             bool found = false;
             for (int i = 0; i < clientCount; i++) {
                 if (clients[i].getId() == id && clients[i].getPassword() == pass) {
@@ -913,26 +890,21 @@ void clientMainMenu() {
             }
             if (!found) {
                 cout << "Invalid credentials.\n";
+                pauseAndClear();
             }
+            // if found, Client::menu handles its own clears
+            break;
         }
-        else if (choice == 3) {
-            int id;
-            cout << "Client ID: ";
-            cin >> id;
+
+        case 3: {
+            int id = getIntInput("Client ID: ");
             bool found = false;
             for (int i = 0; i < clientCount; i++) {
                 if (clients[i].getId() == id) {
+                    string n = getStringInput("New Name: ");
+                    string p = getStringInput("New Password: ");
+                    double b = getDoubleInput("New Balance: ");
 
-                    string n;
-                    string p;
-                    double b;
-
-                    cout << "New Name: ";
-                    cin >> n;
-                    cout << "New Password: ";
-                    cin >> p;
-                    cout << "New Balance: ";
-                    cin >> b;
                     clients[i].setName(n);
                     clients[i].setPassword(p);
                     clients[i].setBalance(b);
@@ -945,12 +917,17 @@ void clientMainMenu() {
             if (!found) {
                 cout << "Client not found.\n";
             }
-        }
-        else if (choice == 0) {
+            pauseAndClear();
             break;
         }
-        else {
+
+        case 0:
+            // back to main; clear happens in main loop too
+            break;
+
+        default:
             cout << "Invalid choice.\n";
+            pauseAndClear();
         }
     } while (choice != 0);
 }
@@ -958,41 +935,34 @@ void clientMainMenu() {
 void employeeMainMenu() {
     int choice;
     do {
+        clearScreen();
         cout << "\n==== Employee Main ====\n";
         cout << "1. Add Employee\n";
         cout << "2. Already an Employee\n";
         cout << "3. Edit Employee Info\n";
         cout << "0. Back\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
+        switch (choice) {
+        case 1: {
             if (employeeCount >= MAX_EMPLOYEES) {
                 cout << "Cannot add more employees.\n";
-                continue;
+                pauseAndClear();
+                break;
             }
-
-            int id;
-            string n;
-            string p;
-            double s;
-
-            cout << "Employee ID: ";
-            cin >> id;
-            cout << "Name: ";
-            cin >> n;
-            cout << "Password: ";
-            cin >> p;
-            cout << "Salary: ";
-            cin >> s;
+            int id = getIntInput("Employee ID: ");
+            string n = getStringInput("Name: ");
+            string p = getStringInput("Password: ");
+            double s = getDoubleInput("Salary: ");
 
             Employee e;
             e.setId(id);
             e.setName(n);
             e.setPassword(p);
             e.setSalary(s);
+
             if (Validation::validateID(id) &&
                 Validation::validateName(n) &&
                 Validation::validatePassword(p) &&
@@ -1004,14 +974,15 @@ void employeeMainMenu() {
             else {
                 cout << "Invalid employee data.\n";
             }
+            pauseAndClear();
+            break;
         }
-        else if (choice == 2) {
-            int id;
-            string pass;
-            cout << "Employee ID: ";
-            cin >> id;
-            cout << "Password: ";
-            cin >> pass;
+
+        case 2: {
+            int id = getIntInput("Employee ID: ");
+            string name = getStringInput("Employee name: ");
+            string pass = getStringInput("Password (must be between 8 - 20): ");
+
             bool found = false;
             for (int i = 0; i < employeeCount; i++) {
                 if (employees[i].getId() == id && employees[i].getPassword() == pass) {
@@ -1021,81 +992,205 @@ void employeeMainMenu() {
                 }
             }
             if (!found) {
-                cout << "Invalid credentials.\n";
+                cout << "Invalid Infos\n";
+                pauseAndClear();
             }
+            break;
         }
-        else if (choice == 3) {
-            int id;
-            cout << "Employee ID: ";
-            cin >> id;
+
+        case 3: {
+            int id = getIntInput("Employee ID: ");
             bool found = false;
             for (int i = 0; i < employeeCount; i++) {
                 if (employees[i].getId() == id) {
-                    string n;
-                    string p;
-                    double s;
-                    cout << "New Name: ";
-                    cin >> n;
-                    cout << "New Password: ";
-                    cin >> p;
-                    cout << "New Salary: ";
-                    cin >> s;
+                    string n = getStringInput("New Name: ");
+                    string p = getStringInput("New Password: ");
+                    double s = getDoubleInput("New Salary: ");
+
                     employees[i].setName(n);
                     employees[i].setPassword(p);
                     employees[i].setSalary(s);
                     saveEmployees();
-                    cout << "Employee updated.\n";
+                    cout << "Employee updated\n";
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                cout << "Employee not found.\n";
+                cout << "Employee not found\n";
             }
-        }
-        else if (choice == 0) {
+            pauseAndClear();
             break;
         }
-        else {
-            cout << "Invalid choice.\n";
+
+        case 0:
+            break;
+
+        default:
+            cout << "Invalid choice\n";
+            pauseAndClear();
         }
     } while (choice != 0);
 }
 
 void adminMainMenu() {
-    if (adminCount == 0) {
-        Admin a;
-        a.setId(1);
-        a.setName("AdminA");
-        a.setPassword("adminpass");
-        a.setSalary(5000);
-        admins[adminCount++] = a;
-        saveAdmins();
-    }
+    int choice;
+    do {
+        clearScreen();
+        cout << "\n==== Admin Main Menu ====\n";
+        cout << "1. Login as Admin\n";
+        cout << "2. Add a New Admin\n";
+        cout << "0. Exit\n";
 
-    int id;
-    string pass;
-    cout << "Admin ID: ";
-    cin >> id;
-    cout << "Password: ";
-    cin >> pass;
+        choice = getIntInput("Choose: ");
+        clearScreen();
 
-    bool ok = false;
-    int idx = -1;
-    for (int i = 0; i < adminCount; i++) {
-        if (admins[i].getId() == id && admins[i].getPassword() == pass) {
-            ok = true;
-            idx = i;
+        switch (choice) {
+        case 1: {
+            int id;
+            string password;
+            cout << "Enter Admin ID: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Enter Password: ";
+            getline(cin, password);
+
+            int loggedInAdminIndex = -1;
+            for (int i = 0; i < adminCount; i++) {
+                if (admins[i].getId() == id && admins[i].getPassword() == password) {
+                    loggedInAdminIndex = i;
+                    break;
+                }
+            }
+
+            if (loggedInAdminIndex == -1) {
+                cout << "Invalid credentials.\n";
+                pauseAndClear();
+                break;
+            }
+
+            cout << "Login successful!\n";
+
+            int panelChoice;
+            do {
+                clearScreen();
+                cout << "\n==== Admin Control Panel ====\n";
+                cout << "1. List Clients\n";
+                cout << "2. List Employees\n";
+                cout << "3. List Admins\n";
+                cout << "0. Logout\n";
+
+                panelChoice = getIntInput("Choose: ");
+                clearScreen();
+
+                switch (panelChoice) {
+                case 1:
+                    admins[loggedInAdminIndex].listClient();
+                    pauseAndClear();
+                    break;
+
+                case 2:
+                    admins[loggedInAdminIndex].listEmployee();
+                    pauseAndClear();
+                    break;
+
+                case 3:
+                    if (adminCount == 0) {
+                        cout << "No admins.\n";
+                        pauseAndClear();
+                        break;
+                    }
+
+                    for (int i = 0; i < adminCount; i++) {
+                        cout << (i + 1) << ". ID: " << admins[i].getId()
+                            << " | Name: " << admins[i].getName()
+                            << " | Salary: " << admins[i].getSalary() << endl;
+                    }
+
+                    int adminChoice;
+                    cout << "\nChoose admin number to edit/delete (0 to cancel): ";
+                    adminChoice = getIntInput("");
+                    if (adminChoice > 0 && adminChoice <= adminCount) {
+                        int action;
+                        cout << "1. Edit\n2. Delete\nChoose action: ";
+                        action = getIntInput("");
+
+                        if (action == 1) {
+                            string newName, newPassword;
+                            double newSalary;
+                            do { newName = getStringInput("New Name: "); } while (!Validation::validateName(newName));
+                            do { newPassword = getStringInput("New Password: "); } while (!Validation::validatePassword(newPassword));
+                            newSalary = getDoubleInput("New Salary: ");
+                            if (!Validation::validateSalary(newSalary)) newSalary = 5000;
+
+                            admins[adminChoice - 1].setName(newName);
+                            admins[adminChoice - 1].setPassword(newPassword);
+                            admins[adminChoice - 1].setSalary(newSalary);
+
+                            saveAdmins();
+                            cout << "Admin updated successfully.\n";
+                        }
+                        else if (action == 2) {
+                            for (int i = adminChoice - 1; i < adminCount - 1; i++) {
+                                admins[i] = admins[i + 1];
+                            }
+                            adminCount--;
+                            saveAdmins();
+                            cout << "Admin deleted successfully.\n";
+                        }
+                        else {
+                            cout << "Invalid action.\n";
+                        }
+                        pauseAndClear();
+                    }
+                    break;
+
+                case 0:
+                    cout << "Logging out...\n";
+                    pauseAndClear();
+                    break;
+
+                default:
+                    cout << "Invalid choice.\n";
+                    pauseAndClear();
+                }
+
+            } while (panelChoice != 0);
             break;
         }
-    }
-    if (!ok) {
-        cout << "Invalid credentials\n";
-        return;
-    }
 
-    admins[idx].menu();
+        case 2: {
+            if (adminCount >= MAX_ADMINS) {
+                cout << "Admin storage full.\n";
+                pauseAndClear();
+                break;
+            }
+
+            int id;
+            string name, password;
+
+            do { id = getIntInput("Enter new Admin ID: "); } while (!Validation::validateID(id));
+            do { name = getStringInput("Enter Admin Name: "); } while (!Validation::validateName(name));
+            do { password = getStringInput("Enter Password (8-20 chars): "); } while (!Validation::validatePassword(password));
+
+            admins[adminCount++] = Admin(id, name, password, 5000);
+            saveAdmins();
+            cout << "New admin added successfully!\n";
+            pauseAndClear();
+            break;
+        }
+
+        case 0:
+            break;
+        default:
+            cout << "Invalid choice.\n";
+            pauseAndClear();
+        }
+
+    } while (choice != 0);
 }
+
+
 
 void mainMenu() {
     loadClients();
@@ -1104,33 +1199,36 @@ void mainMenu() {
 
     int choice;
     do {
+        clearScreen();
         cout << "\n===== Main Menu =====\n";
         cout << "1. Login as Client\n";
         cout << "2. Login as Employee\n";
         cout << "3. Login as Admin\n";
         cout << "0. Exit\n";
-        cout << "Choose: ";
-        cin >> choice;
 
+        choice = getIntInput("Choose: ");
         clearScreen();
 
-        if (choice == 1) {
+        switch (choice) {
+        case 1:
             clientMainMenu();
-        }
-        else if (choice == 2) {
+            break;
+        case 2:
             employeeMainMenu();
-        }
-        else if (choice == 3) {
+            break;
+        case 3:
             adminMainMenu();
-        }
-        else if (choice == 0) {
+            break;
+        case 0:
             saveClients();
             saveEmployees();
             saveAdmins();
-            cout << "Exiting...\n";
-        }
-        else {
+            goodbyeDelay();
+            clearScreen();
+            break;
+        default:
             cout << "Invalid choice.\n";
+            pauseAndClear();
         }
     } while (choice != 0);
 }
