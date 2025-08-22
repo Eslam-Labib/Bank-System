@@ -38,7 +38,7 @@ int getIntInput(const string& prompt) {
             return value;
         }
         else {
-            cout << "Invalid input. Please enter a valid number.\n";
+            cout << "Invalid input Please enter a valid number\n";
             clearInputBuffer();
         }
     }
@@ -53,7 +53,7 @@ double getDoubleInput(const string& prompt) {
             return value;
         }
         else {
-            cout << "Invalid input. Please enter a valid number.\n";
+            cout << "Invalid input Please enter a valid number\n";
             clearInputBuffer();
         }
     }
@@ -67,7 +67,7 @@ string getStringInput(const string& prompt) {
 }
 
 void pauseAndClear() {
-    cout << "Press Enter to continue...";
+    cout << "Press Enter to continue ";
     getStringInput("");
     clearScreen();
 }
@@ -117,7 +117,7 @@ public:
             id = i;
         }
         else {
-            cout << "Invalid ID. Must be positive.\n";
+            cout << "Invalid ID Must be positive\n";
         }
     }
 
@@ -126,7 +126,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 1-20 chars.\n";
+            cout << "Invalid name Letters only, 1-20 chars\n";
         }
     }
 
@@ -135,7 +135,7 @@ public:
             password = p;
         }
         else {
-            cout << "Invalid password. 8-20 chars.\n";
+            cout << "Invalid password 8-20 chars\n";
         }
     }
 
@@ -144,7 +144,7 @@ public:
             balance = b;
         }
         else {
-            cout << "Invalid balance. Must be >= 1500.\n";
+            cout << "Invalid balance Must be >= 1500\n";
         }
     }
 
@@ -182,7 +182,7 @@ public:
             id = i;
         }
         else {
-            cout << "Invalid ID. Must be positive.\n";
+            cout << "Invalid ID Must be positive\n";
         }
     }
 
@@ -191,7 +191,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 1-20 chars.\n";
+            cout << "Invalid name Letters only, 1-20 chars\n";
         }
     }
 
@@ -200,7 +200,7 @@ public:
             password = p;
         }
         else {
-            cout << "Invalid password. 8-20 chars.\n";
+            cout << "Invalid password 8-20 chars\n";
         }
     }
 
@@ -209,7 +209,7 @@ public:
             salary = s;
         }
         else {
-            cout << "Invalid salary. Must be >= 5000.\n";
+            cout << "Invalid salary Must be >= 5000\n";
         }
     }
 
@@ -247,7 +247,7 @@ public:
             id = i;
         }
         else {
-            cout << "Invalid ID. Must be positive.\n";
+            cout << "Invalid ID Must be positive\n";
         }
     }
 
@@ -256,7 +256,7 @@ public:
             name = n;
         }
         else {
-            cout << "Invalid name. Letters only, 1-20 chars.\n";
+            cout << "Invalid name Letters only, 1-20 chars\n";
         }
     }
 
@@ -265,7 +265,7 @@ public:
             password = p;
         }
         else {
-            cout << "Invalid password. 8-20 chars.\n";
+            cout << "Invalid password 8-20 chars\n";
         }
     }
 
@@ -274,7 +274,7 @@ public:
             salary = s;
         }
         else {
-            cout << "Invalid salary. Must be >= 5000.\n";
+            cout << "Invalid salary Must be >= 5000\n";
         }
     }
 
@@ -428,7 +428,7 @@ void Client::menu() {
                 cout << "New Balance: " << balance << endl;
             }
             else {
-                cout << "Invalid amount.\n";
+                cout << "Invalid amount\n";
             }
             saveClients();
             pauseAndClear();
@@ -443,7 +443,7 @@ void Client::menu() {
                 cout << "New Balance: " << balance << endl;
             }
             else {
-                cout << "Invalid amount or insufficient funds.\n";
+                cout << "Invalid amount or insufficient funds\n";
             }
             saveClients();
             pauseAndClear();
@@ -456,7 +456,7 @@ void Client::menu() {
             double amount = getDoubleInput("Amount to transfer: ");
 
             if (amount <= 0 || amount > balance) {
-                cout << "Invalid amount or insufficient funds.\n";
+                cout << "Invalid amount or insufficient funds\n";
             }
             else {
                 bool found = false;
@@ -464,13 +464,13 @@ void Client::menu() {
                     if (clients[i].getId() == target) {
                         clients[i].setBalance(clients[i].getBalance() + amount);
                         balance -= amount;
-                        cout << "Transfer done. Your New Balance: " << balance << endl;
+                        cout << "Transfer done Your New Balance: " << balance << endl;
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
-                    cout << "Recipient not found.\n";
+                    cout << "Recipient not found\n";
                 }
             }
             saveClients();
@@ -484,7 +484,7 @@ void Client::menu() {
             break;
 
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
         }
     } while (choice != 0);
@@ -492,7 +492,7 @@ void Client::menu() {
 
 void Employee::addClient(Client& client) {
     if (clientCount >= MAX_CLIENTS) {
-        cout << "Client storage full.\n";
+        cout << "Client storage full\n";
         return;
     }
     clients[clientCount++] = client;
@@ -510,7 +510,7 @@ Client* Employee::searchClient(int cid) {
 
 void Employee::listClient() {
     if (clientCount == 0) {
-        cout << "No clients.\n";
+        cout << "No clients\n";
         return;
     }
     for (int i = 0; i < clientCount; i++) {
@@ -521,14 +521,14 @@ void Employee::listClient() {
 void Employee::editClient(int cid, const string& n, const string& p, double b) {
     Client* c = searchClient(cid);
     if (!c) {
-        cout << "Client not found.\n";
+        cout << "Client not found\n";
         return;
     }
     c->setName(n);
     c->setPassword(p);
     c->setBalance(b);
     saveClients();
-    cout << "Client updated.\n";
+    cout << "Client updated\n";
 }
 
 void Employee::menu() {
@@ -562,10 +562,10 @@ void Employee::menu() {
                 Validation::validatePassword(p) &&
                 Validation::validateBalance(b)) {
                 addClient(c);
-                cout << "Client added.\n";
+                cout << "Client added\n";
             }
             else {
-                cout << "Invalid client data.\n";
+                cout << "Invalid client data\n";
             }
             pauseAndClear();
             break;
@@ -575,7 +575,7 @@ void Employee::menu() {
             int cid = getIntInput("Client ID: ");
             Client* c = searchClient(cid);
             if (c) c->display();
-            else   cout << "Client not found.\n";
+            else    cout << "Client not found\n";
             pauseAndClear();
             break;
         }
@@ -602,7 +602,7 @@ void Employee::menu() {
             break;
 
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
             break;
         }
@@ -611,7 +611,7 @@ void Employee::menu() {
 
 void Admin::addClient(Client& client) {
     if (clientCount >= MAX_CLIENTS) {
-        cout << "Client storage full.\n";
+        cout << "Client storage full\n";
         return;
     }
     clients[clientCount++] = client;
@@ -629,7 +629,7 @@ Client* Admin::searchClient(int cid) {
 
 void Admin::listClient() {
     if (clientCount == 0) {
-        cout << "No clients.\n";
+        cout << "No clients\n";
         return;
     }
     for (int i = 0; i < clientCount; i++) {
@@ -640,19 +640,19 @@ void Admin::listClient() {
 void Admin::editClient(int cid, const string& n, const string& p, double b) {
     Client* c = searchClient(cid);
     if (!c) {
-        cout << "Client not found.\n";
+        cout << "Client not found\n";
         return;
     }
     c->setName(n);
     c->setPassword(p);
     c->setBalance(b);
     saveClients();
-    cout << "Client updated.\n";
+    cout << "Client updated\n";
 }
 
 void Admin::addEmployee(Employee& employee) {
     if (employeeCount >= MAX_EMPLOYEES) {
-        cout << "Employee storage full.\n";
+        cout << "Employee storage full\n";
         return;
     }
     employees[employeeCount++] = employee;
@@ -671,19 +671,19 @@ Employee* Admin::searchEmployee(int eid) {
 void Admin::editEmployee(int eid, const string& n, const string& p, double s) {
     Employee* e = searchEmployee(eid);
     if (!e) {
-        cout << "Employee not found.\n";
+        cout << "Employee not found\n";
         return;
     }
     e->setName(n);
     e->setPassword(p);
     e->setSalary(s);
     saveEmployees();
-    cout << "Employee updated.\n";
+    cout << "Employee updated\n";
 }
 
 void Admin::listEmployee() {
     if (employeeCount == 0) {
-        cout << "No employees.\n";
+        cout << "No employees\n";
         return;
     }
     for (int i = 0; i < employeeCount; i++) {
@@ -729,10 +729,10 @@ void Admin::menu() {
                 Validation::validatePassword(p) &&
                 Validation::validateSalary(s)) {
                 addEmployee(e);
-                cout << "Employee added.\n";
+                cout << "Employee added\n";
             }
             else {
-                cout << "Invalid employee data.\n";
+                cout << "Invalid employee data\n";
             }
             pauseAndClear();
             break;
@@ -747,7 +747,7 @@ void Admin::menu() {
                     << " | Salary: " << e->getSalary() << endl;
             }
             else {
-                cout << "Employee not found.\n";
+                cout << "Employee not found\n";
             }
             pauseAndClear();
             break;
@@ -785,10 +785,10 @@ void Admin::menu() {
                 Validation::validatePassword(p) &&
                 Validation::validateBalance(b)) {
                 addClient(c);
-                cout << "Client added.\n";
+                cout << "Client added\n";
             }
             else {
-                cout << "Invalid client data.\n";
+                cout << "Invalid client data\n";
             }
             pauseAndClear();
             break;
@@ -798,7 +798,7 @@ void Admin::menu() {
             int cid = getIntInput("Client ID: ");
             Client* c = searchClient(cid);
             if (c) c->display();
-            else   cout << "Client not found.\n";
+            else    cout << "Client not found\n";
             pauseAndClear();
             break;
         }
@@ -824,7 +824,7 @@ void Admin::menu() {
             break;
 
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
         }
     } while (choice != 0);
@@ -846,7 +846,7 @@ void clientMainMenu() {
         switch (choice) {
         case 1: {
             if (clientCount >= MAX_CLIENTS) {
-                cout << "Cannot add more clients.\n";
+                cout << "Cannot add more clients\n";
                 pauseAndClear();
                 break;
             }
@@ -867,10 +867,10 @@ void clientMainMenu() {
                 Validation::validateBalance(b)) {
                 clients[clientCount++] = c;
                 saveClients();
-                cout << "Client added.\n";
+                cout << "Client added\n";
             }
             else {
-                cout << "Invalid client data.\n";
+                cout << "Invalid client data\n";
             }
             pauseAndClear();
             break;
@@ -889,7 +889,7 @@ void clientMainMenu() {
                 }
             }
             if (!found) {
-                cout << "Invalid credentials.\n";
+                cout << "Invalid credentials\n";
                 pauseAndClear();
             }
             // if found, Client::menu handles its own clears
@@ -909,13 +909,13 @@ void clientMainMenu() {
                     clients[i].setPassword(p);
                     clients[i].setBalance(b);
                     saveClients();
-                    cout << "Client updated.\n";
+                    cout << "Client updated\n";
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                cout << "Client not found.\n";
+                cout << "Client not found\n";
             }
             pauseAndClear();
             break;
@@ -926,7 +926,7 @@ void clientMainMenu() {
             break;
 
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
         }
     } while (choice != 0);
@@ -948,7 +948,7 @@ void employeeMainMenu() {
         switch (choice) {
         case 1: {
             if (employeeCount >= MAX_EMPLOYEES) {
-                cout << "Cannot add more employees.\n";
+                cout << "Cannot add more employees\n";
                 pauseAndClear();
                 break;
             }
@@ -969,10 +969,10 @@ void employeeMainMenu() {
                 Validation::validateSalary(s)) {
                 employees[employeeCount++] = e;
                 saveEmployees();
-                cout << "Employee added.\n";
+                cout << "Employee added\n";
             }
             else {
-                cout << "Invalid employee data.\n";
+                cout << "Invalid employee data\n";
             }
             pauseAndClear();
             break;
@@ -1064,12 +1064,12 @@ void adminMainMenu() {
             }
 
             if (loggedInAdminIndex == -1) {
-                cout << "Invalid credentials.\n";
+                cout << "Invalid credentials\n";
                 pauseAndClear();
                 break;
             }
 
-            cout << "Login successful!\n";
+            cout << "Login successful\n";
 
             int panelChoice;
             do {
@@ -1096,7 +1096,7 @@ void adminMainMenu() {
 
                 case 3:
                     if (adminCount == 0) {
-                        cout << "No admins.\n";
+                        cout << "No admins\n";
                         pauseAndClear();
                         break;
                     }
@@ -1128,7 +1128,7 @@ void adminMainMenu() {
                             admins[adminChoice - 1].setSalary(newSalary);
 
                             saveAdmins();
-                            cout << "Admin updated successfully.\n";
+                            cout << "Admin updated successfully\n";
                         }
                         else if (action == 2) {
                             for (int i = adminChoice - 1; i < adminCount - 1; i++) {
@@ -1136,22 +1136,22 @@ void adminMainMenu() {
                             }
                             adminCount--;
                             saveAdmins();
-                            cout << "Admin deleted successfully.\n";
+                            cout << "Admin deleted successfully\n";
                         }
                         else {
-                            cout << "Invalid action.\n";
+                            cout << "Invalid action\n";
                         }
                         pauseAndClear();
                     }
                     break;
 
                 case 0:
-                    cout << "Logging out...\n";
+                    cout << "Logging out\n";
                     pauseAndClear();
                     break;
 
                 default:
-                    cout << "Invalid choice.\n";
+                    cout << "Invalid choice\n";
                     pauseAndClear();
                 }
 
@@ -1161,7 +1161,7 @@ void adminMainMenu() {
 
         case 2: {
             if (adminCount >= MAX_ADMINS) {
-                cout << "Admin storage full.\n";
+                cout << "Admin storage full\n";
                 pauseAndClear();
                 break;
             }
@@ -1175,7 +1175,7 @@ void adminMainMenu() {
 
             admins[adminCount++] = Admin(id, name, password, 5000);
             saveAdmins();
-            cout << "New admin added successfully!\n";
+            cout << "New admin added successfully\n";
             pauseAndClear();
             break;
         }
@@ -1183,7 +1183,7 @@ void adminMainMenu() {
         case 0:
             break;
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
         }
 
@@ -1227,7 +1227,7 @@ void mainMenu() {
             clearScreen();
             break;
         default:
-            cout << "Invalid choice.\n";
+            cout << "Invalid choice\n";
             pauseAndClear();
         }
     } while (choice != 0);
