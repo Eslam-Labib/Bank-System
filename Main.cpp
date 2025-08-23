@@ -294,6 +294,117 @@ public:
     void listEmployee();
 };
 
+class DataSourceInterface {
+public:
+    virtual void addClient(const Client& client) = 0;
+    virtual void addEmployee(const Employee& employee) = 0;
+    virtual void addAdmin(const Admin& admin) = 0;
+
+    virtual vector<Client> getAllClients() = 0;
+    virtual vector<Employee> getAllEmployees() = 0;
+    virtual vector<Admin> getAllAdmins() = 0;
+
+    virtual void removeAllClients() = 0;
+    virtual void removeAllEmployees() = 0;
+    virtual void removeAllAdmins() = 0;
+
+    virtual ~DataSourceInterface() {}
+};
+
+
+class FileManager : public DataSourceInterface {
+public:
+    
+    void addClient(const Client& client) override {
+        ofstream file("clients.txt", ios::app);
+        if (file.is_open()) {
+            file << client.getId() << " "
+                 << client.getName() << " "
+                 << client.getPassword() << " "
+                 << client.getBalance() << "\n";
+        }
+    }
+
+    void addEmployee(const Employee& employee) override {
+        ofstream file("employees.txt", ios::app);
+        if (file.is_open()) {
+            file << employee.getId() << " "
+                 << employee.getName() << " "
+                 << employee.getPassword() << " "
+                 << employee.getSalary() << "\n";
+        }
+    }
+
+    void addAdmin(const Admin& admin) override {
+        ofstream file("admins.txt", ios::app);
+        if (file.is_open()) {
+            file << admin.getId() << " "
+                 << admin.getName() << " "
+                 << admin.getPassword() << " "
+                 << admin.getSalary() << "\n";
+        }
+    }
+
+ 
+    vector<Client> getAllClients() override {
+        vector<Client> result;
+        ifstream file("clients.txt");
+        int id; string name, pass; double balance;
+        while (file >> id >> name >> pass >> balance) {
+            Client c;
+            c.setId(id);
+            c.setName(name);
+            c.setPassword(pass);
+            c.setBalance(balance);
+            result.push_back(c);
+        }
+        return result;
+    }
+
+    vector<Employee> getAllEmployees() override {
+        vector<Employee> result;
+        ifstream file("employees.txt");
+        int id; string name, pass; double salary;
+        while (file >> id >> name >> pass >> salary) {
+            Employee e;
+            e.setId(id);
+            e.setName(name);
+            e.setPassword(pass);
+            e.setSalary(salary);
+            result.push_back(e);
+        }
+        return result;
+    }
+
+    vector<Admin> getAllAdmins() override {
+        vector<Admin> result;
+        ifstream file("admins.txt");
+        int id; string name, pass; double salary;
+        while (file >> id >> name >> pass >> salary) {
+            Admin a;
+            a.setId(id);
+            a.setName(name);
+            a.setPassword(pass);
+            a.setSalary(salary);
+            result.push_back(a);
+        }
+        return result;
+    }
+
+    
+    void removeAllClients() override {
+        ofstream file("clients.txt", ios::trunc);
+    }
+
+    void removeAllEmployees() override {
+        ofstream file("employees.txt", ios::trunc);
+    }
+
+    void removeAllAdmins() override {
+        ofstream file("admins.txt", ios::trunc);
+    }
+};
+
 Client clients[MAX_CLIENTS];
 int clientCount = 0;
 Employee employees[MAX_EMPLOYEES];
