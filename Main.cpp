@@ -78,7 +78,7 @@ public:
         return id > 0;
     }
     static bool validateName(const string& name) {
-        if (name.size() < 1 || name.size() > 20) return false;
+        if (name.size() < 5 || name.size() > 20) return false;
         for (char c : name) {
             if (!isalpha(c) && c != ' ') return false;
         }
@@ -309,100 +309,6 @@ public:
     virtual void removeAllAdmins() = 0;
 
     virtual ~DataSourceInterface() {}
-};
-
-
-class FileManager : public DataSourceInterface {
-public:
-    
-    void addClient(const Client& client) override {
-        ofstream file("clients.txt", ios::app);
-        if (file.is_open()) {
-            file << client.getId() << " "
-                 << client.getName() << " "
-                 << client.getPassword() << " "
-                 << client.getBalance() << "\n";
-        }
-    }
-
-    void addEmployee(const Employee& employee) override {
-        ofstream file("employees.txt", ios::app);
-        if (file.is_open()) {
-            file << employee.getId() << " "
-                 << employee.getName() << " "
-                 << employee.getPassword() << " "
-                 << employee.getSalary() << "\n";
-        }
-    }
-
-    void addAdmin(const Admin& admin) override {
-        ofstream file("admins.txt", ios::app);
-        if (file.is_open()) {
-            file << admin.getId() << " "
-                 << admin.getName() << " "
-                 << admin.getPassword() << " "
-                 << admin.getSalary() << "\n";
-        }
-    }
-
- 
-    vector<Client> getAllClients() override {
-        vector<Client> result;
-        ifstream file("clients.txt");
-        int id; string name, pass; double balance;
-        while (file >> id >> name >> pass >> balance) {
-            Client c;
-            c.setId(id);
-            c.setName(name);
-            c.setPassword(pass);
-            c.setBalance(balance);
-            result.push_back(c);
-        }
-        return result;
-    }
-
-    vector<Employee> getAllEmployees() override {
-        vector<Employee> result;
-        ifstream file("employees.txt");
-        int id; string name, pass; double salary;
-        while (file >> id >> name >> pass >> salary) {
-            Employee e;
-            e.setId(id);
-            e.setName(name);
-            e.setPassword(pass);
-            e.setSalary(salary);
-            result.push_back(e);
-        }
-        return result;
-    }
-
-    vector<Admin> getAllAdmins() override {
-        vector<Admin> result;
-        ifstream file("admins.txt");
-        int id; string name, pass; double salary;
-        while (file >> id >> name >> pass >> salary) {
-            Admin a;
-            a.setId(id);
-            a.setName(name);
-            a.setPassword(pass);
-            a.setSalary(salary);
-            result.push_back(a);
-        }
-        return result;
-    }
-
-    
-    void removeAllClients() override {
-        ofstream file("clients.txt", ios::trunc);
-    }
-
-    void removeAllEmployees() override {
-        ofstream file("employees.txt", ios::trunc);
-    }
-
-    void removeAllAdmins() override {
-        ofstream file("admins.txt", ios::trunc);
-    }
 };
 
 Client clients[MAX_CLIENTS];
@@ -645,7 +551,7 @@ void Employee::editClient(int cid, const string& n, const string& p, double b) {
 void Employee::menu() {
     int choice;
     do {
-        clearScreen();  // clear before showing the menu
+        clearScreen();
         cout << "\n==== Employee Menu ====\n";
         cout << "1. Add Client\n";
         cout << "2. Search Client by ID\n";
@@ -1003,7 +909,6 @@ void clientMainMenu() {
                 cout << "Invalid credentials\n";
                 pauseAndClear();
             }
-            // if found, Client::menu handles its own clears
             break;
         }
 
@@ -1031,9 +936,7 @@ void clientMainMenu() {
             pauseAndClear();
             break;
         }
-
         case 0:
-            // back to main; clear happens in main loop too
             break;
 
         default:
