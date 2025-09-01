@@ -4,7 +4,6 @@
 #include <cctype>
 #include <chrono>
 #include <thread>
-#include <limits>
 using namespace std;
 
 int MAX_CLIENTS = 100;
@@ -95,6 +94,8 @@ public:
     }
 };
 
+// ====== Classes ======
+// ====== Client Class ======
 class Client {
 private:
     int id;
@@ -112,6 +113,7 @@ public:
         setBalance(b);
     }
 
+	// Setters with validation
     void setId(int i) {
         if (Validation::validateID(i)) {
             id = i;
@@ -148,11 +150,13 @@ public:
         }
     }
 
+	// Getters
     int getId() { return id; }
     string getName() { return name; }
     string getPassword() { return password; }
     double getBalance() { return balance; }
 
+	// Client Display
     void display() {
         cout << "ID: " << id << " | Name: " << name << " | Balance: " << balance << endl;
     }
@@ -160,6 +164,7 @@ public:
     void menu();
 };
 
+// ====== Employee Class ======
 class Employee {
 private:
     int id;
@@ -177,6 +182,7 @@ public:
         setSalary(s);
     }
 
+	// Setters with validation
     void setId(int i) {
         if (Validation::validateID(i)) {
             id = i;
@@ -213,11 +219,13 @@ public:
         }
     }
 
+	// Getters
     int getId() { return id; }
     string getName() { return name; }
     string getPassword() { return password; }
     double getSalary() { return salary; }
 
+	// Employee Functions
     void menu();
     void addClient(Client& client);
     Client* searchClient(int cid);
@@ -225,6 +233,7 @@ public:
     void editClient(int cid, string n, string p, double b);
 };
 
+// ====== Admin Class ======
 class Admin {
 private:
     int id;
@@ -242,6 +251,7 @@ public:
         setSalary(s);
     }
 
+	// Setters with validation
     void setId(int i) {
         if (Validation::validateID(i)) {
             id = i;
@@ -278,11 +288,13 @@ public:
         }
     }
 
+	// Getters
     int getId() { return id; }
     string getName() { return name; }
     string getPassword() { return password; }
     double getSalary() { return salary; }
 
+	// Admin Functions
     void menu();
     void addClient(Client& client);
     Client* searchClient(int cid);
@@ -301,6 +313,7 @@ int employeeCount = 0;
 Admin admins[10];
 int adminCount = 0;
 
+// ====== Files ======
 void saveClients() {
     ofstream file("clients.txt");
     for (int i = 0; i < clientCount; i++) {
@@ -400,7 +413,8 @@ void loadAdmins() {
     }
 }
 
-// ====== Menus ======
+// ====== Sub Menus ======
+// ==== Client Menu ====
 void Client::menu() {
     int choice;
     do {
@@ -493,6 +507,7 @@ void Client::menu() {
     } while (choice != 0);
 }
 
+// Add Client
 void Employee::addClient(Client& client) {
     if (clientCount >= MAX_CLIENTS) {
         cout << "\033[31mClient storage full\033[0m\n";
@@ -502,6 +517,7 @@ void Employee::addClient(Client& client) {
     saveClients();
 }
 
+// Search Client by ID
 Client* Employee::searchClient(int cid) {
     for (int i = 0; i < clientCount; i++) {
         if (clients[i].getId() == cid) {
@@ -511,6 +527,7 @@ Client* Employee::searchClient(int cid) {
     return nullptr;
 }
 
+// List all clients
 void Employee::listClient() {
     if (clientCount == 0) {
         cout << "\033[31mNo clients\033[0m\n";
@@ -521,6 +538,7 @@ void Employee::listClient() {
     }
 }
 
+// Edit client details
 void Employee::editClient(int cid, string n, string p, double b) {
     Client* c = searchClient(cid);
     if (!c) {
@@ -534,6 +552,7 @@ void Employee::editClient(int cid, string n, string p, double b) {
     cout << "Client updated\n";
 }
 
+// ==== Employee Menu ====
 void Employee::menu() {
     int choice;
     do {
@@ -612,6 +631,7 @@ void Employee::menu() {
     } while (choice != 0);
 }
 
+// Admin -> add client
 void Admin::addClient(Client& client) {
     if (clientCount >= MAX_CLIENTS) {
         cout << "\033[31mClient storage full\033[0m\n";
@@ -621,6 +641,7 @@ void Admin::addClient(Client& client) {
     saveClients();
 }
 
+// Search Client by ID
 Client* Admin::searchClient(int cid) {
     for (int i = 0; i < clientCount; i++) {
         if (clients[i].getId() == cid) {
@@ -630,6 +651,7 @@ Client* Admin::searchClient(int cid) {
     return nullptr;
 }
 
+// List all clients
 void Admin::listClient() {
     if (clientCount == 0) {
         cout << "\033[31mNo clients\033[0m\n";
@@ -640,6 +662,7 @@ void Admin::listClient() {
     }
 }
 
+// Edit client details
 void Admin::editClient(int cid, string n, string p, double b) {
     Client* c = searchClient(cid);
     if (!c) {
@@ -653,6 +676,7 @@ void Admin::editClient(int cid, string n, string p, double b) {
     cout << "Client updated\n";
 }
 
+// Admin -> add employee
 void Admin::addEmployee(Employee& employee) {
     if (employeeCount >= MAX_EMPLOYEES) {
         cout << "\033[31mEmployee storage full\033[0m\n";
@@ -662,6 +686,7 @@ void Admin::addEmployee(Employee& employee) {
     saveEmployees();
 }
 
+// Search Employee by ID
 Employee* Admin::searchEmployee(int eid) {
     for (int i = 0; i < employeeCount; i++) {
         if (employees[i].getId() == eid) {
@@ -671,6 +696,7 @@ Employee* Admin::searchEmployee(int eid) {
     return nullptr;
 }
 
+// Edit employee details
 void Admin::editEmployee(int eid, string n, string p, double s) {
     Employee* e = searchEmployee(eid);
     if (!e) {
@@ -684,6 +710,7 @@ void Admin::editEmployee(int eid, string n, string p, double s) {
     cout << "Employee updated\n";
 }
 
+// List all employees
 void Admin::listEmployee() {
     if (employeeCount == 0) {
         cout << "\033[31mNo employees\033[0m\n";
@@ -696,6 +723,7 @@ void Admin::listEmployee() {
     }
 }
 
+// ==== Admin Menu ====
 void Admin::menu() {
     int choice;
     do {
@@ -833,6 +861,7 @@ void Admin::menu() {
     } while (choice != 0);
 }
 
+// ====== Main Menus ======
 void clientMainMenu() {
     int choice;
     do {
