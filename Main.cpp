@@ -1098,7 +1098,7 @@ void adminMainMenu() {
             }
 
             if (loggedInAdminIndex == -1) {
-                cout << "\033[31Invalid credentials\033[0m" << endl;
+                cout << "\033[31mInvalid credentials\033[0m" << endl;
                 pauseAndClear();
                 break;
             }
